@@ -1,0 +1,5 @@
+baseURL = 'https://shetaye.me'
+languageCode = 'en-us'
+title = 'Joseph Shetaye'
+
+theme = 'console'
