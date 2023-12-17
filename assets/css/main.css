@@ -1,0 +1,52 @@
+body {
+  color: #0C1618;
+  background-color: #FAEFE1;
+
+  font-family: system-ui, sans-serif;
+  font-size: 20px;
+  line-height: 1.7;
+  
+  margin: 20px auto;
+  padding: 0 10px;
+  max-width: 700px;
+}
+
+/* night mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #FAEFE1;
+    background-color: #FAEFE1;
+  }
+
+  a:link {
+    color: lightskyblue;
+  }
+
+  a:visited {
+    color: violet;
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  line-height: 1.2;
+}
+
+.publish-timestamp {
+  text-align: center;
+}
+
+/* Add horizontal scroll on code blocks */
+.chroma {
+  font-size: 16px;
+  overflow-x: scroll;
+  padding: 20px;
+}
+
+.page-map {
+  list-style-type: none;
+}

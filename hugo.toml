@@ -2,4 +2,14 @@ baseURL = 'https://shetaye.me'
 languageCode = 'en-us'
 title = 'Joseph Shetaye'
 
-theme = 'console'
+pygmentsUseClasses = true
+pygmentsCodefences = true
+
+[markup.highlight]
+  codeFences = true
+  guessSyntax = true
+  tabWidth = 4
+  noClasses = false
+  lineNoStart = 1
+  lineNos = false
+  lineNumbersInTable = true
