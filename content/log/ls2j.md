@@ -4,12 +4,11 @@ date = 2023-12-14T16:45:41-08:00
 draft = false
 +++
 
-When you're working with LotusScript, it's sometimes the case that there are
-simply things that you either can't do in or would rather not do with the
-language. For example, a project I've been working on lately requires files to
-be uploaded in chunks, and for each chunk to have its
-[SHA-512](https://en.wikipedia.org/wiki/SHA-2) hash associated
-with it. 
+When you're working with LotusScript, it's sometimes the case that there
+are simply things that you either can't do in or would rather not do
+with the language. For example, a project I've been working on lately
+requires files to be uploaded in chunks, and for each chunk to have its
+[SHA-512](https://en.wikipedia.org/wiki/SHA-2) hash associated with it.
 
 In theory, I could at the very least chunk the file using the
 [NotesStream](https://help.hcltechsw.com/dom_designer/11.0.1/basic/H_NOTESSTREAM_CLASS.html)
