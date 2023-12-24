@@ -1,12 +1,12 @@
 <ul class="page-map">
   {{ range first 1 .Ancestors}}
-  <li><a href="{{ .RelPermalink }}">📁 Back</a></li>
+  <li>
+    <a href="{{ .RelPermalink }}" class="section">Back</a>
+  </li>
   {{ end }}
   {{ range .Pages }}
   <li>
-    {{ if eq .Kind "section" }}📁{{ else }}📄{{ end }}
-    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    <a href="{{ .RelPermalink }}" class="{{ if .IsSection }}section{{ else }}page{{ end }}">{{ .LinkTitle }}</a>
   </li>
   {{ end }}
 </ul>
-

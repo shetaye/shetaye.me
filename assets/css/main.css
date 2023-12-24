@@ -49,4 +49,27 @@ h1, h2, h3 {
 
 .page-map {
   list-style-type: none;
+  padding: 10px;
+  background-color: white;
+}
+
+.page-map .section:before {
+  content: '📁 ';
+}
+
+.page-map .section:hover:before {
+  content: '📂 ';
+}
+
+.page-map .page:before {
+  content: '📃 ';
+}
+
+.page-map .page:hover:before {
+  content: '📄 ';
+}
+
+.page-map a:hover {
+  /*background-color: blue;*/
+  text-decoration: underline;
 }
