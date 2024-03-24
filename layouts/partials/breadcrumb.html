@@ -1,1 +1,5 @@
-{{ range .Ancestors.Reverse }}<a href="{{ .RelPermalink }}"> {{ if .Title }}{{ .Title }}{{else}}Untitled{{end}} </a>/{{ end }}
+<div class="breadcrumb">
+  {{ range .Ancestors.Reverse }}
+    <a href="{{ .RelPermalink }}"> {{ if .Title }}{{ .Title }}{{else}}Untitled{{end}} </a>/
+  {{ end }}
+</div>

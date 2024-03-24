@@ -1,1 +1,14 @@
-{{.Site.Title}} /{{ partial "partials/breadcrumb.html" . }}
+<nav class="header-menu">
+  {{ with site.Menus.header }}
+  <h1>{{ site.Title }}</h1>
+    {{ range . }}
+      {{ if $.IsMenuCurrent .Menu . }}
+        <a class="active" aria-current="page" href="{{ .URL }}">{{ .Name }}</a>
+      {{ else }}
+        <a href="{{ .URL }}">{{ .Name }}</a>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+</nav>
+
+{{ partial "partials/breadcrumb.html" . }}

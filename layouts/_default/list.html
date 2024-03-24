@@ -1,5 +1,22 @@
 {{ define "main" }}
-  <h1>{{ .Title }}</h1>
+  <h2>{{ .Title }}</h2>
   {{ .Content }}
-  {{ partial "map.html" . }}
+  <div class="page-list">
+    <table>
+      <thead>
+        <tr>
+          <th class="left">Title</th>
+          <th class="right">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .Pages }}
+        <tr>
+          <td class="left"><a href="{{ .RelPermalink }}">{{ .Title }}</a></td>
+          <td class="right">{{ .Date | time.Format "02-01-2006" }}</td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
 {{ end }}

@@ -2,6 +2,16 @@ baseURL = 'https://shetaye.me'
 languageCode = 'en-us'
 title = 'Joseph Shetaye'
 
+[menus]
+[[menus.header]]
+  name = 'Weblog'
+  pageRef = '/weblog'
+  weight = 10
+[[menus.header]]
+  name = 'Resumé'
+  pageRef = '/professional'
+  weight = 20
+
 pygmentsUseClasses = true
 pygmentsCodefences = true
 
