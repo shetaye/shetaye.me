@@ -3,7 +3,7 @@
   {{ $dateHuman := .Date | time.Format ":date_long" }}
   <hgroup>
     <h1>{{ .Title }}</h1>
-    <p><time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time></p>
+    <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
   </hgroup>
 
 
