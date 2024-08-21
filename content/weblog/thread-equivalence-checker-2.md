@@ -83,41 +83,94 @@ this approach
 Instead, the Thread Equivalence Checker supports automatic detection of shared
 memory. The detected shared memory (if enabled) is unioned with user supplied
 shared memory (if specified). Automatic shared memory detection is done with the
-Armv7's MMU security features.
+Armv6's MMU security features.
 
-A full description of the Armv7 virtual memory system or virtual memory in
+A full description of the Armv6 virtual memory system or virtual memory in
 general is much too long for this section, weblog, or series. Maybe I'll
 write a weblog on it in the future.
 
 Instead, I'll cover how we used the memory system to perform automatic shared
 memory detection.
 
-Based on our definition above, we can compute the shared memory set with set
-operations alone so long as we have the set of memory addresses written by each
-function and read by each function. To find that we configure our address space,
-MMU, and fault handlers such that any reads or writes when we are executing a
-function under test trigger a data abort. From within that data abort we observe
-the instruction that made the request (since data aborts report only a single
-byte that caused the abort we need to decode the instruction to determine the
-remaining bytes) and the address it attempted to access.
+### Arm Virtual Memory System Security: Domains, Permissions, and Modes
 
-**tl;dr the rough steps for doing this are**:
-1. Compile functions under study into seperate section and move them somewhere
-   far (>1MB) away from checker code at startup
-2. Set up pinned TLB entries that map all code to itself (KISS). Give the
-   checker sections a different *domain* than the function under study
-   section(s). Only function **code** is given the second domain. Give the
-   function under study section(s) read/write priveleged permissions (`AP` &
-   `APX`) and make them global.
-3. When you want to catch a read/write: set the domain access of the second
-   domain to `client` (instead of `manager`, which disables permission checks),
-   then context switch into `USER` mode (out of the default `SUPER`) while
-   simultaneously jumping to testing code. Now accesses to sections in the
-   kernel domain will trigger section permission faults, which raise data aborts
-   (because, importantly, instruction fetches for function code will not trigger
-   permission faults thanks to our seperate sections). The data abort handler
-   will also avoid triggering faults because the permissions will not be checked
-   in the abort handler mode.
+The Armv6 architecture has a few interlocking ways of protecting memory and
+execution state.
+
+#### Modes
+
+The ARM core is always executing in one of 7 processor modes:
+- User (`usr`)
+- System (`sys`)
+- FIQ (`fiq`)
+- IRQ (`irq`)
+- Supervisor (`svc`)
+- Abort (`abt`)
+- Undefined (`und`)
+
+The first, user mode, is the only unprivileged mode. The processor cannot leave
+this mode without raising an exception, and certain operations are prohibited.
+
+The remaining modes serve various purposes but all are privileged, so they can
+switch mode by writing to system registers and perform any supported operation.
+
+The important take away for our application is that the core can be either
+running in a privileged or unprivileged (user) mode and that exceptions always execute
+in a privileged mode (`abt`).
+
+#### Permissions
+
+Each TLB entry contains 5 permission bits (esoterically named `S`, `R`, `APX`,
+and the two bit `AP`) that together form the access permissions for the entry.
+Entries have seperate controls for privileged and user accesses, though
+user access implies privileged access. For example, an entry could be
+read/write access for privileged modes but read only access for user mode.
+
+#### Domains
+
+The final piece of the security scheme we use is domains. The domain system
+serves as a quick way to enable and disable the permission scheme described
+above without having to change permission bits on page table entries (which
+could mean invalidating large swathes of the TLB).
+
+ARM MMU (TLB & page table) entries each are assigned one of 16 domains. A single
+register, the Domain Access Control Register, controls access to each of the 16
+domains via a two bit access control field. A domain can either be no access,
+client, or manager (the fourth possible value is reserved and undefined). Any
+accesses to memory mapped by an entry in a no access domain fault. If the domain
+is a manager, however, the accesses are *always allowed*. Finally, if the domain
+is a client, the above permission bits are checked.
+
+### Catching Reads and Writes
+
+Based on our definition for shared memory, we can compute the shared memory set
+with set operations alone so long as we have the set of memory addresses written
+by each function and read by each function. To collect those addresses,
+collectively called the read-write sets, we can use the above permissioning
+scheme to trigger data aborts exclusively when we are executing code we are
+checking.
+
+First, we need to compile checked code into seperate section and move them
+somewhere far (>1MB) away from checker code at startup. This sets up the address
+space so that we can use coarse grained sections (instead of finer grain pages)
+and TLB pinning (which is easier to deal with than full page tables and works
+just as well for us).
+
+Next, we set up pinned TLB entries that map all code to itself. We give the
+checker sections a different *domain* than the checked section(s). Only checked
+**code** is given the second domain (this ensures instruction fetches do not
+fault). Give the checked section(s) read/write privileged permissions and make
+them global. Recall that these permissions are only ever checked if the domain
+of the section is a client, not a manager. Initialize the domains to all be
+managers to begin with.
+
+Now, when we want to catch a read/write: set the domain access of the second
+domain to client, then context switch into user mode while simultaneously
+jumping to testing code. This is best accomplished by running functions as their
+own threads and context switching. Now accesses to sections in the checker
+domain (which includes all global data) will trigger section permission faults,
+which raise data aborts. The data abort handler will not fault because the
+permissions will not be checked when in the privileged abort handler mode.
 
 Once in the data abort, figuring out the complete set of addresses accessed is a
 task in Arm instruction decoding. Here is the function we use, complete with
@@ -218,20 +271,11 @@ demand(domain != user_dom, we should never fault when accessing the user domain)
 uint32_t w = bit_isset(dfsr, 11);
 ```
 
-## Aside: Arm MMU Security: Domains, Permissions, and Modes
-
-The Armv7 architecture has a few interlocking ways of protecting memory and
-execution state. I debated whether to include a section on them here. For
-brevity, I decided against it. Along with the Armv7 virtual memory system (and
-virtual memory in general), it is best left as a seperate weblog.
-
 ## Aside: Address Sets
 
-So far, we've seen sets of addresses unioned and intersected. We've also seen
-addresses inserted into sets without care for duplication. Since we could not
-find a set implementation that suited our needs (efficientely represents sparse
-sets across the entire 32 bit address space) The Thread Equivalence Checker
-makes use of a custom set implementation.
+Since we could not find a set implementation that suited our needs (efficiently
+represents sparse sets across the entire 32 bit address space) the Thread
+Equivalence Checker uses a custom set implementation.
 
 Our set data structure needs to support the following:
 1. Quick insert and lookup
@@ -242,28 +286,129 @@ Our set data structure needs to support the following:
 5. Able to represent the entire 32-bit address space
 
 We chose a tree. Each node contains a 32-bit mask and 32 children
-pointers. Each level of the tree further partitions the address space into 32
-pieces. Thus, we need `ceil(log(2**32, 32)) = 7` levels for the tree. Each
-grouping of `log(32, 2) = 5` bits in an address is used as an index into a nodes
-children (or index into the mask if we are at a leaf node). For example:
+pointers. Each level of the tree partitions the address space into 32
+pieces. Thus, we need `ceil(log(2**32, 32)) = 7` levels for the tree.
+
+Each grouping of `log(32, 2) = 5` bits in an address is used as an index into a
+nodes children (or index into the mask if we are at a leaf node). Each node has
+an `offset` field that stores the bit offset of this grouping. For example:
 
 ```
-v = 01 00010 00100 00101 00101 00110 00111
+v       = 01 00010 00100 00101 00101 00110 00111
+        =  1   2     4     5     5     6     7
+offset  = 30   25    20    15    10    5     0
 ```
 
 (Note that there is some overhand and we want to put that in the root node to
 save space)
 
-To insert `v` into the set, we lookup the second child of the root,third child
+To insert `v` into the set, we lookup the second child of the root, third child
 of that child, fifth child of that child, and so on.  The mask of each node
 indicates whether that child is "present," so if it is 0 we allocate it before
 moving on. Finally, at the leaf node, we lookup the eighth bit of the mask and
 set it if it is not already set.
 
+```c
+uint32_t set_insert(set_t* s, uint32_t v) {
+  uint32_t index = (v >> s->offset) & 0x1F;
+
+  uint32_t bit = 0x1 << index;
+  uint32_t present = s->mask & bit;
+
+  s->mask |= bit;
+
+  // If this isn't a leaf node, we need to recurse
+  if(s->offset > 0) {
+    // If the child doesn't exist, make it
+    if(!present) {
+      s->children[index] = set_alloc_offset(s->offset - 5);
+    }
+    return set_insert(s->children[index], v);
+  }
+
+  return present;
+}
+```
+
 To lookup `v`, we perform the same recursive descent. However, we can return
 `false` early if a mask bit is ever 0.
 
-Intersection and union are similarly done by or-ing and and-ing masks.
+```c
+uint32_t set_lookup(set_t* s, uint32_t v) {
+  uint32_t index = (v >> s->offset) & 0x1F;
+
+  uint32_t bit = 0x1 << index;
+  uint32_t present = s->mask & bit;
+
+  // If the prefix is not present in the set, give up
+  if(!present) return 0;
+
+  // If the prefix is present and we are a leaf node, return the present bit
+  if(s->offset == 0) return present >> index;
+
+  // Otherwise recurse
+  return set_lookup(s->children[index], v);
+}
+```
+
+To perform a union of two sets `x` and `y`, we merge subtrees by ORing the masks
+and recursing if `x` and `y` both have a child `i`.
+
+```c
+void set_union(set_t* z, set_t* x, set_t* y) {
+  assert(z->offset == x->offset && x->offset == y->offset);
+
+  z->mask = x->mask | y->mask;
+
+  if(z->offset == 0) return;
+
+  uint32_t both_present = x->mask & y->mask;
+  uint32_t at_least_one_present = x->mask | y->mask;
+  for(int i = 0; i < 32; i++) {
+    if(mask_has(both_present, i)) {
+      // Make the child
+      z->children[i] = set_alloc_offset(z->offset - 5);
+
+      // Recursively call union
+      set_union(z->children[i], x->children[i], y->children[i]);
+    } else if(mask_has(at_least_one_present, i)) {
+      // Make the child
+      z->children[i] = set_alloc_offset(z->offset - 5);
+
+      // Just take the one that is present
+      if(mask_has(x->mask, i)) {
+        set_copy(z->children[i], x->children[i]);
+      } else if(mask_has(y->mask, i)) {
+        set_copy(z->children[i], y->children[i]);
+      }
+    }
+  }
+}
+```
+
+For intersections we do something similar, merging subtrees by ANDing the masks
+and recursing if both `x` and `y` have a child `i`.
+
+```c
+void set_intersection(set_t* z, set_t* x, set_t* y) {
+  assert(z->offset == x->offset && x->offset == y->offset);
+  
+  uint32_t both_present = y->mask & x->mask;
+  z->mask = both_present;
+
+  if(z->offset == 0) return;
+
+  for(int i = 0; i < 32; i++) {
+    if(mask_has(both_present, i)) {
+      z->children[i] = set_alloc_offset(x->offset - 5);
+      set_intersection(z->children[i], x->children[i], y->children[i]);
+    }
+  }
+}
+```
+
+Finally, an inorder traversal of the tree orders set elements by increasing
+value.
 
 Improvements could definetly be made to the set implementation, though its
 simplicity was the main attraction at the time. For example, one notable
@@ -294,5 +439,5 @@ The hash function we used is 32-bit xxHash.
 ## Stay Tuned
 
 In part 3, I'll finally cover the core of the checker: executing interleavings
-using Armv7 debugging hardware.
+using Armv6 debugging hardware.
 
