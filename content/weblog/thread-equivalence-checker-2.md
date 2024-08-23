@@ -51,8 +51,7 @@ the start that its value would remain identical to its starting value after any
 execution of `a` and `b`.
 
 Finally, what if only one function accesses global memory? Even with reads and
-writes, a single function (e.g. `a`) is still guaranteed to execute sequentially
-with.
+writes, a single function (e.g. `a`) is still guaranteed to execute sequentially.
 
 With all that in mind, our definition for the end state of running our functions
 is the values of all memory locations written by at least one of the functions
