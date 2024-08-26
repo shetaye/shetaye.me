@@ -440,3 +440,5 @@ The hash function we used is 32-bit xxHash.
 In part 3, I'll finally cover the core of the checker: executing interleavings
 using Armv6 debugging hardware.
 
+[Part 3]({{< relref "thread-equivalence-checker-3" >}})
+

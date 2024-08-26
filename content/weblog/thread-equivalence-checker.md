@@ -203,6 +203,8 @@ implementation blank: how do we run an interleaving? how do we collect and
 compare end states? In the next posts we'll use Arm debugging features and the
 MMU to do all of the above!
 
+[Part 2]({{< relref "thread-equivalence-checker-2.md" >}})
+
 ## Appendix
 
 Assumptions:
