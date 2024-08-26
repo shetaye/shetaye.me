@@ -19,9 +19,9 @@ language. This abstract machine is sequential, and executes statements in their
 entirety before moving on to the next.  Real machines are much more nuanced than
 this, hence the *abstract* in abstract machine, but it's a useful and portable
 approximation. Since sequential execution is by design, we can begin by saying
-that sequential execution is the "correct" way for a progrma to execute. That
-is, for some functions, we can say that any final result (i.e. observable state)
-produced by a sequential order of the functions is correct.
+that sequential execution is the "correct" way for a program to execute. In
+other words, we want to show that our functions are [sequentially
+consistent](https://en.wikipedia.org/wiki/Sequential_consistency).
 
 For example, consider the following program (compiled without heavy optimization):
 
