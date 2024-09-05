@@ -12,16 +12,43 @@ tool for verifying the correctness of multithreaded programs.
 I'll present this project as a series of blog posts. In the first, I want to
 give a motivation and a high-level overview of the project.
 
-## Equivalency 
+## Motivation 
 
 Languages like C define an *abstract machine* that is the target of the
-language. This abstract machine is sequential, and executes statements in their
-entirety before moving on to the next.  Real machines are much more nuanced than
-this, hence the *abstract* in abstract machine, but it's a useful and portable
-approximation. Since sequential execution is by design, we can begin by saying
-that sequential execution is the "correct" way for a program to execute. In
-other words, we want to show that our functions are [sequentially
-consistent](https://en.wikipedia.org/wiki/Sequential_consistency).
+language. This abstract machine is sequential, and executes statements in
+their entirety before moving on to the next. Since sequential execution
+is by design, we can begin by saying that sequential execution is the
+"correct" way for a program to execute; it is what the programmer
+intended. However, real machines do all sorts of (nondeterministic) things like [reorder
+instructions](https://en.wikipedia.org/wiki/Out-of-order_execution),
+[start an instruction before the last one was
+finished](https://en.wikipedia.org/wiki/Instruction_pipelining),
+or [execute multiple instructions at the exact same
+time](https://en.wikipedia.org/wiki/Superscalar_processor). Additionally, a
+single "instruction" for the C abstract machine is usually multiple instructions
+for the underlying processor. Finally, even with all of the prior optimizations
+removed, multiple [threads](https://en.wikipedia.org/wiki/Thread_(computing)) of
+execution are multiplexed to give the appearence of true multitasking.
+
+Each of these optimizations were created to give the appearence of a single
+stream of execution while also improving performance year after year. The
+benefit is that *most of the time* programmers can ignore all of the nuance and
+write imperative code *as if* it is being executed one line after another. The
+downside is that when you *can't* ignore the nuance, it is becomes very
+difficult to know for certain whether your code is correct.
+
+Hardware optimizations are designed to give the appearence of sequential
+execution relative to a single stream of instructions (and even then they
+sometimes [don't](https://meltdownattack.com)), but the stream must be
+correct in the first place. This is on the program to uphold. One way
+this promise can be broken is with software multitasking, which is what
+our checker attempts to verify.
+
+## Equivalency
+
+We want to show that all possible ways the operating system can run
+our threads will result in an observable state that is consistent with
+the state produced by a single-threaded execution of our program.
 
 For example, consider the following program (compiled without heavy optimization):
 
@@ -209,6 +236,6 @@ MMU to do all of the above!
 
 Assumptions:
 1. A uniprocessor system: all instructions execute atomically and cannot be
-   interrupted
+   interrupted.
 2. Deterministic functions: given a specific interleaving, functions will
    always execute the same instructions
