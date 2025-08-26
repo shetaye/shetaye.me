@@ -1,9 +1,3 @@
-+++
-title = 'Thread Equivalence Checking - Part 1'
-date = 2024-07-08T20:20:45-07:00
-draft = false
-+++
-
 Concurrent programs are complicated to write and even more complicated to get
 right. To deal with this, my friend
 [Aaryan](https://www.linkedin.com/in/aaryan-singhal-151aa91a6) and I wrote a
@@ -230,7 +224,7 @@ implementation blank: how do we run an interleaving? how do we collect and
 compare end states? In the next posts we'll use Arm debugging features and the
 MMU to do all of the above!
 
-[Part 2]({{< relref "thread-equivalence-checker-2.md" >}})
+[Part 2](weblog://thread-equivalence-checker-2)
 
 ## Appendix
 

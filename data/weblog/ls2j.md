@@ -1,9 +1,3 @@
-+++
-title = 'LS2J'
-date = 2023-12-14T16:45:41-08:00
-draft = false
-+++
-
 When you're working with LotusScript, it's sometimes the case that there
 are simply things that you either can't do in or would rather not do
 with the language. For example, a project I've been working on lately

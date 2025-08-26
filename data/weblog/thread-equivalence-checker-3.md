@@ -1,9 +1,3 @@
-+++
-title = 'Thread Equivalence Checking - Part 3'
-date = 2024-08-21T17:57:32-05:00
-draft = false
-+++
-
 Quick recap: there are three phases to our equivalency checker:
 1. Collect sequential end states
 2. Collect concurrent end states (via interleavings)

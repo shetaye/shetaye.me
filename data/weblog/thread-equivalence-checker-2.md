@@ -1,9 +1,3 @@
-+++
-title = 'Thread Equivalence Checking - Part 2'
-date = 2024-08-19T16:57:26+02:00
-draft = false
-+++
-
 Quick recap: there are three phases to our equivalency checker:
 1. Collect sequential end states
 2. Collect concurrent end states (via interleavings)
@@ -440,5 +434,5 @@ The hash function we used is 32-bit xxHash.
 In part 3, I'll finally cover the core of the checker: executing interleavings
 using Armv6 debugging hardware.
 
-[Part 3]({{< relref "thread-equivalence-checker-3" >}})
+[Part 3](weblog://thread-equivalence-checker-3)
 
