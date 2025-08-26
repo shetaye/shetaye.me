@@ -98,8 +98,8 @@ impl Common {
         html! {
             nav {
                 h1 { a href=(Site::find_home()) { "shetaye.me" }}
-                a href=(Weblog::find_all()) { "Weblog" }
-                a href=(Site::find_work()) { "Work" }
+                a href=(Weblog::find_all()) { "weblog" }
+                a href=(Site::find_work()) { "work" }
             }
         }
     }
