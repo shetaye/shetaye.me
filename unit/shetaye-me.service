@@ -1,0 +1,17 @@
+[Unit]
+Description=Shetaye.me personal website
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+ExecStart=/usr/local/bin/shetaye_me
+Environment=HOST=0.0.0.0
+Environment=PORT=3030
+Restart=always
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
