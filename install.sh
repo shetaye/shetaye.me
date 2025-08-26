@@ -2,6 +2,14 @@
 
 set -e
 
+echo "Stopping existing shetaye-me service if running..."
+if sudo systemctl is-active --quiet shetaye-me.service 2>/dev/null; then
+    sudo systemctl stop shetaye-me.service
+    echo "Stopped shetaye-me service"
+else
+    echo "Service not running or not installed"
+fi
+
 echo "Building shetaye.me website in release mode..."
 cargo build --release
 
