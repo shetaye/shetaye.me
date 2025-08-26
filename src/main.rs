@@ -72,6 +72,8 @@ impl Common {
     }
     fn includes(title: &str, additional: Option<Markup>) -> Markup {
         let base = html! {
+            link rel="preload" href=(StaticFiles::find("style.css").unwrap()) as="style";
+            link rel="preload" href=(StaticFiles::find("InterTight.ttf").unwrap()) as="font" type="font/ttf" crossorigin="anonymous";
             link rel="stylesheet" href=(StaticFiles::find("style.css").unwrap());
             link rel="icon" type="image/x-icon" href="/static/favicon.ico";
             link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png";
