@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Custom font faces */
+  @font-face {
+    font-family: 'Inter Tight';
+    src: url('/static/InterTight.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter Tight';
+    src: url('/static/InterTight-italic.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Source Code Pro';
+    src: url('/static/SourceCodePro.ttf') format('truetype');
+    font-weight: 200 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Source Code Pro';
+    src: url('/static/SourceCodePro-italic.ttf') format('truetype');
+    font-weight: 200 900;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  /* Styles for markdown-rendered content */
+  article a {
+    @apply text-black dark:text-white underline;
+  }
+
+  article a:hover {
+    @apply no-underline;
+  }
+
+  /* General link styling outside of nav */
+  a {
+    @apply text-black dark:text-white underline;
+  }
+
+  a:hover {
+    @apply no-underline;
+  }
+
+  /* Override for nav links - they should not have underlines */
+  nav a {
+    @apply no-underline;
+  }
+
+  article code,
+  article pre {
+    @apply font-mono text-base;
+  }
+
+  article code {
+    @apply whitespace-pre overflow-x-auto inline-block max-w-full align-top;
+  }
+
+  article table {
+    @apply border-collapse w-full;
+  }
+
+  article th,
+  article td {
+    @apply border border-border dark:border-border-dark p-1 text-left;
+  }
+
+  article th {
+    @apply bg-white dark:bg-black;
+  }
+
+  /* Restore default HTML styling for markdown elements */
+  article h1 {
+    @apply text-4xl font-bold mt-6 mb-4;
+  }
+
+  article h2 {
+    @apply text-3xl font-bold mt-5 mb-3;
+  }
+
+  article h3 {
+    @apply text-2xl font-bold mt-4 mb-2;
+  }
+
+  article h4 {
+    @apply text-xl font-bold mt-3 mb-2;
+  }
+
+  article h5 {
+    @apply text-lg font-bold mt-2 mb-1;
+  }
+
+  article h6 {
+    @apply text-base font-bold mt-2 mb-1;
+  }
+
+  article p {
+    @apply my-4;
+  }
+
+  article ul {
+    @apply list-disc pl-10 my-4;
+  }
+
+  article ol {
+    @apply list-decimal pl-10 my-4;
+  }
+
+  article li {
+    @apply my-1;
+  }
+
+  article blockquote {
+    @apply border-l-4 border-border dark:border-border-dark pl-4 my-4 italic;
+  }
+
+  article hr {
+    @apply border-t border-border dark:border-border-dark my-8;
+  }
+
+  article strong {
+    @apply font-bold;
+  }
+
+  article em {
+    @apply italic;
+  }
+
+  article pre {
+    @apply my-4 overflow-x-auto;
+  }
+}

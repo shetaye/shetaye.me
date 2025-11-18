@@ -66,8 +66,9 @@ impl Common {
         html! {
             (DOCTYPE)
             meta charset="utf-8";
+            meta name="viewport" content="width=device-width, initial-scale=1.0";
             head { (head) }
-            body { (body) }
+            body class="mx-auto my-4 max-w-[700px] px-4 bg-white dark:bg-black text-black dark:text-white font-sans" { (body) }
         }
     }
     fn includes(title: &str, additional: Option<Markup>) -> Markup {
@@ -97,9 +98,9 @@ impl Common {
     fn header() -> Markup {
         html! {
             nav {
-                h1 { a href=(Site::find_home()) { "shetaye.me" }}
-                a href=(Weblog::find_all()) { "weblog" }
-                a href=(Site::find_work()) { "work" }
+                h1 class="inline mr-2 text-2xl" { a class="bg-black dark:bg-white text-white dark:text-black px-1 no-underline hover:bg-white hover:dark:bg-black hover:text-black hover:dark:text-white" href=(Site::find_home()) { "shetaye.me" }}
+                a class="bg-black dark:bg-white text-white dark:text-black px-1 no-underline hover:bg-white hover:dark:bg-black hover:text-black hover:dark:text-white mr-2" href=(Weblog::find_all()) { "weblog" }
+                a class="bg-black dark:bg-white text-white dark:text-black px-1 no-underline hover:bg-white hover:dark:bg-black hover:text-black hover:dark:text-white mr-2" href=(Site::find_work()) { "work" }
             }
         }
     }
@@ -222,15 +223,15 @@ impl Weblog {
     fn all() -> Markup {
         Common::basic("Weblog", html! {
             p { "all of my blog entries" }
-            table {
+            table class="border-collapse w-full" {
                 tr {
-                    th { "Published On" }
-                    th { "Post" }
+                    th class="border border-border dark:border-border-dark p-1 text-left bg-white dark:bg-black" { "Published On" }
+                    th class="border border-border dark:border-border-dark p-1 text-left bg-white dark:bg-black" { "Post" }
                 }
                 @for entry in Self::entries_by_date() {
                     tr {
-                        td { (entry.published_on.date().to_string()) }
-                        td { a href=(Weblog::find(entry.slug).unwrap()) { (entry.title) }}
+                        td class="border border-border dark:border-border-dark p-1 text-left" { (entry.published_on.date().to_string()) }
+                        td class="border border-border dark:border-border-dark p-1 text-left" { a class="text-black dark:text-white hover:no-underline" href=(Weblog::find(entry.slug).unwrap()) { (entry.title) }}
                     }
                 }
             }
