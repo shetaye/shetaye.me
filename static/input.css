@@ -54,31 +54,49 @@
     @apply no-underline;
   }
 
-  /* Override for nav links - they should not have underlines */
+  /* Body styling */
+  body {
+    @apply mx-auto my-4 max-w-[700px] px-4 bg-white dark:bg-black text-black dark:text-white font-sans;
+  }
+
+  /* Navigation styling */
+  nav h1 {
+    @apply inline mr-4 text-3xl font-bold;
+  }
+
   nav a {
-    @apply no-underline;
+    @apply bg-black dark:bg-white text-white dark:text-black px-1 no-underline hover:bg-white hover:dark:bg-black hover:text-black hover:dark:text-white mr-2;
+  }
+
+  /* Table styling */
+  table {
+    @apply border-collapse w-full;
+  }
+
+  th, td {
+    @apply border border-border dark:border-border-dark p-1 text-left;
+  }
+
+  th {
+    @apply bg-white dark:bg-black;
+  }
+
+  /* General paragraph spacing */
+  p {
+    @apply my-4;
   }
 
   article code,
   article pre {
-    @apply font-mono text-base;
+    @apply font-mono text-sm;
   }
 
   article code {
-    @apply whitespace-pre overflow-x-auto inline-block max-w-full align-top;
+    @apply inline align-baseline;
   }
 
-  article table {
-    @apply border-collapse w-full;
-  }
-
-  article th,
-  article td {
-    @apply border border-border dark:border-border-dark p-1 text-left;
-  }
-
-  article th {
-    @apply bg-white dark:bg-black;
+  article pre code {
+    @apply block overflow-x-auto;
   }
 
   /* Restore default HTML styling for markdown elements */
