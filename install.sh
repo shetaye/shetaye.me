@@ -10,6 +10,9 @@ else
     echo "Service not running or not installed"
 fi
 
+echo "Cleaning previous build..."
+cargo clean
+
 echo "Building shetaye.me website in release mode..."
 cargo build --release
 
