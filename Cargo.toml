@@ -11,6 +11,8 @@ pulldown-cmark = { version = "0.13.0", features = ["simd"] }
 rust-embed="8.7.2"
 time = { version = "0.3", features = ["macros"] }
 tokio = { version = "1", features = ["full"] }
+rand = "0.8"
+futures = "0.3"
 
 [build-dependencies]
 ureq = "2.10"
