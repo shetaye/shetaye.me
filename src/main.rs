@@ -12,7 +12,6 @@ use mime_guess::from_path;
 use std::net::SocketAddr;
 use tokio;
 use pulldown_cmark::{Event, Tag};
-use rand::Rng;
 use futures::stream::unfold;
 use axum::body::Body;
 
@@ -285,8 +284,6 @@ impl Faucet {
 
 struct DesignLanguage {}
 impl DesignLanguage {
-    fn find() -> String { "/design-language".to_string() }
-
     fn css_vars_with_prefix(prefix: &str) -> Vec<(String, String)> {
         include_str!("../static/input.css")
             .lines()
@@ -307,6 +304,12 @@ impl DesignLanguage {
         Self::css_vars_with_prefix("--modus-")
     }
 
+    fn spacing_scale() -> Vec<(String, String)> {
+        let mut scale = Self::css_vars_with_prefix("--space-");
+        scale.sort_by_key(|(name, _)| name.parse::<u32>().ok().unwrap_or(u32::MAX));
+        scale
+    }
+
     fn text_color_for_hex(hex: &str) -> &'static str {
         let clean = hex.trim().trim_start_matches('#');
         if clean.len() != 6 {
@@ -322,165 +325,177 @@ impl DesignLanguage {
 
     async fn handler() -> Html<String> {
         let modus_operandi_palette = Self::modus_operandi_palette();
+        let spacing_scale = Self::spacing_scale();
+        let guide_palette_tokens = [
+            "bg-main",
+            "bg-dim",
+            "fg-main",
+            "fg-dim",
+            "fg-alt",
+            "bg-active",
+            "bg-inactive",
+            "border",
+        ];
+        let guide_palette: Vec<(String, String)> = guide_palette_tokens
+            .iter()
+            .filter_map(|token| {
+                modus_operandi_palette
+                    .iter()
+                    .find(|(name, _)| name == token)
+                    .map(|(_, hex)| ((*token).to_string(), hex.to_string()))
+            })
+            .collect();
 
         let body = html! {
-            article {
-                h1 { "Design Language" }
-
-                // Typography
-                h2 { "Typography" }
-                h1 { "Heading 1" }
-                h2 { "Heading 2" }
-                h3 { "Heading 3" }
-                h4 { "Heading 4" }
-                h5 { "Heading 5" }
-                h6 { "Heading 6" }
-                p { "This is a paragraph of body text. It demonstrates the default font, size, line-height, and color used throughout the site." }
-                p {
-                    strong { "Bold text" } " — "
-                    em { "Italic text" } " — "
-                    s { "Strikethrough text" } " — "
-                    code { "inline code" }
-                }
-
-                // Fonts
-                h2 { "Fonts" }
-                h3 { "Inter Tight (sans-serif)" }
-                p style="font-weight: 300;" { "Light (300) — The quick brown fox jumps over the lazy dog." }
-                p style="font-weight: 400;" { "Regular (400) — The quick brown fox jumps over the lazy dog." }
-                p style="font-weight: 500;" { "Medium (500) — The quick brown fox jumps over the lazy dog." }
-                p style="font-weight: 700;" { "Bold (700) — The quick brown fox jumps over the lazy dog." }
-                p style="font-weight: 900;" { "Black (900) — The quick brown fox jumps over the lazy dog." }
-                p style="font-style: italic;" { "Italic — The quick brown fox jumps over the lazy dog." }
-
-                h3 { "Source Code Pro (monospace)" }
-                p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 400;" {
-                    "Regular (400) — The quick brown fox jumps over the lazy dog."
-                }
-                p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 700;" {
-                    "Bold (700) — The quick brown fox jumps over the lazy dog."
-                }
-                p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-style: italic;" {
-                    "Italic — The quick brown fox jumps over the lazy dog."
-                }
-
-                // Colors
-                h2 { "Colors" }
-                div class="color-reference-grid" {
-                    div class="color-reference-card" {
-                        div class="color-reference-swatch" style="background: #ffffff; border: 1px solid #ddd;" {}
-                        p { "White (#fff)" }
-                    }
-                    div class="color-reference-card" {
-                        div class="color-reference-swatch" style="background: #000000; border: 1px solid #333;" {}
-                        p { "Black (#000)" }
-                    }
-                    div class="color-reference-card" {
-                        div class="color-reference-swatch" style="background: #dddddd; border: 1px solid #ddd;" {}
-                        p { "Border (#ddd)" }
-                    }
-                    div class="color-reference-card" {
-                        div class="color-reference-swatch" style="background: #333333; border: 1px solid #333;" {}
-                        p { "Border dark (#333)" }
+            article class="guide-shell" {
+                div class="guide-top" {
+                    h1 class="guide-title" {
+                        span class="guide-badge" { "A" }
+                        "Article Design Language"
                     }
                 }
-                h3 { "Modus Operandi (base palette)" }
-                p { "Dense swatch view for contrast checks: each tile shows category + resolved hex from the shared CSS variables." }
-                div class="palette-grid" {
-                    @for (name, hex) in modus_operandi_palette {
-                        div
-                            class="palette-swatch"
-                            style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(&hex)) ";" } {
-                            div class="palette-swatch-name" { (name) }
-                            div class="palette-swatch-hex" { (hex) }
+
+                div class="guide-divider" {}
+
+                div class="guide-main" {
+                    p {
+                        "Single-column system for article-heavy pages: dense but readable text, compact controls, "
+                        "and restrained accents for navigation, actions, and status."
+                    }
+
+		    p {
+			"Based on "
+			    a href="https://github.com/shetaye/funny-moka/" { "Jack's design" }
+			" and "
+			    a href="https://usgraphics.com/" { "Neil's design" }
+			"."
+		    }
+
+                    h2 { "Color Palette" }
+                    div class="palette-grid" {
+                        @for (name, hex) in &guide_palette {
+                            div
+                                class="palette-swatch"
+                                style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(hex)) ";" } {
+                                div class="palette-swatch-name" { (name) }
+                                div class="palette-swatch-hex" { (hex) }
+                            }
                         }
                     }
-                }
 
+                    h2 { "Typography" }
+                    div class="guide-sample" {
+                        h1 { "Heading 1" }
+                        h2 { "Heading 2" }
+                        h3 { "Heading 3" }
+                        h4 { "Heading 4" }
+                        h5 { "Heading 5" }
+                        h6 { "Heading 6" }
+                        p { "This is a paragraph of body text. It demonstrates the default font, size, line-height, and color used throughout the site." }
+                        p {
+                            strong { "Bold text" } " - "
+                            em { "Italic text" } " - "
+                            s { "Strikethrough text" } " - "
+                            code { "inline code" }
+                        }
 
-                // Links
-                h2 { "Links" }
-                p {
-                    "This is a " a href=(DesignLanguage::find()) { "regular link" }
-                    ". Links are underlined by default and the underline disappears on hover."
-                }
+                        h3 style="font-family: 'Inter Tight', system-ui, sans-serif;" { "Inter Tight (sans-serif)" }
+                        p style="font-weight: 300;" { "Light (300) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-weight: 400;" { "Regular (400) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-weight: 500;" { "Medium (500) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-weight: 700;" { "Bold (700) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-weight: 900;" { "Black (900) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-style: italic;" { "Italic - The quick brown fox jumps over the lazy dog." }
 
-                // Lists
-                h2 { "Lists" }
-                h3 { "Unordered list" }
-                ul {
-                    li { "First item" }
-                    li { "Second item" }
-                    li {
-                        "Third item with nested list"
-                        ul {
-                            li { "Nested item A" }
-                            li { "Nested item B" }
+                        h3 style="font-family: 'Source Code Pro', Consolas, Monaco, monospace;" { "Source Code Pro (monospace)" }
+                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 400;" {
+                            "Regular (400) - The quick brown fox jumps over the lazy dog."
+                        }
+                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 700;" {
+                            "Bold (700) - The quick brown fox jumps over the lazy dog."
+                        }
+                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-style: italic;" {
+                            "Italic - The quick brown fox jumps over the lazy dog."
+                        }
+
+                        h3 style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;" { "IBM Plex Serif (serif)" }
+                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-weight: 400;" {
+                            "Regular (400) - The quick brown fox jumps over the lazy dog."
+                        }
+                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-weight: 700;" {
+                            "Bold (700) - The quick brown fox jumps over the lazy dog."
+                        }
+                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-style: italic;" {
+                            "Italic - The quick brown fox jumps over the lazy dog."
                         }
                     }
-                }
-                h3 { "Ordered list" }
-                ol {
-                    li { "First item" }
-                    li { "Second item" }
-                    li {
-                        "Third item with nested list"
-                        ol {
-                            li { "Nested item 1" }
-                            li { "Nested item 2" }
+
+                    h2 { "Buttons" }
+                    p {
+                        a class="button" href=(Weblog::find_all()) { "button" } " "
+                        a class="button-big" href=(Site::find_home()) { "button-big" }
+                    }
+
+                    h2 { "Component Reference" }
+                    table class="guide-reference-table" {
+                        tr {
+                            th { "Component" }
+                            th { "Description" }
+                        }
+                        tr { td { "Hero title" } td { "Single, high-contrast entrypoint heading." } }
+                        tr { td { "Meta row" } td { "Date, read time, and topic chips." } }
+                        tr { td { "Callout card" } td { "Accent-backed emphasis block." } }
+                        tr { td { "Code block" } td { "Monospace section with subtle surface shift." } }
+                        tr { td { "Inline note" } td { "Compact annotation inside article flow." } }
+                    }
+
+                    h2 { "States" }
+                    div class="guide-states" {
+                        div class="guide-state" { "Default" }
+                        div class="guide-state guide-state-hover" { "Hover" }
+                        div class="guide-state guide-state-focus" { "Focused" }
+                        div class="guide-state guide-state-selected" { "Selected" }
+                        div class="guide-state guide-state-warning" { "Warning" }
+                        div class="guide-state guide-state-error" { "Error" }
+                    }
+
+                    h2 { "Notifications" }
+                    div class="guide-notifications" {
+                        div class="guide-note guide-note-info" { "Article saved successfully." }
+                        div class="guide-note guide-note-warning" { "This draft has unresolved references." }
+                        div class="guide-note guide-note-error" { "Publishing failed: missing required metadata." }
+                    }
+
+                    h2 { "Spacing Scale" }
+                    div class="guide-spacing" {
+                        @for (token, value) in &spacing_scale {
+                            div class="guide-space-item" {
+                                div class="guide-space-bar" style={ "width: var(--space-" (token) ");" } {}
+                                span { "--space-" (token) ": " (value) }
+                            }
                         }
                     }
-                }
 
-                // Tables
-                h2 { "Tables" }
-                table {
-                    tr {
-                        th { "Header 1" }
-                        th { "Header 2" }
-                        th { "Header 3" }
+                    h2 { "Modus Operandi Reference Swatches" }
+                    p { "Dense swatch view for contrast checks using shared CSS variables." }
+                    div class="palette-grid" {
+                        @for (name, hex) in modus_operandi_palette {
+                            div
+                                class="palette-swatch"
+                                style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(&hex)) ";" } {
+                                div class="palette-swatch-name" { (name) }
+                                div class="palette-swatch-hex" { (hex) }
+                            }
+                        }
                     }
-                    tr {
-                        td { "Row 1, Col 1" }
-                        td { "Row 1, Col 2" }
-                        td { "Row 1, Col 3" }
-                    }
-                    tr {
-                        td { "Row 2, Col 1" }
-                        td { "Row 2, Col 2" }
-                        td { "Row 2, Col 3" }
-                    }
-                }
-
-                // Blockquotes
-                h2 { "Blockquotes" }
-                blockquote {
-                    p { "This is a blockquote. It has a left border and italic styling, useful for setting apart quoted material." }
-                }
-
-                // Code Blocks
-                h2 { "Code Blocks" }
-                p { "Inline: " code { "let x = 42;" } }
-                pre {
-                    code {
-                        "fn main() {\n    println!(\"Hello, world!\");\n}"
-                    }
-                }
-
-                // Horizontal Rules
-                h2 { "Horizontal Rules" }
-                p { "The dividers between each section on this page are horizontal rules." }
-                hr;
-
-                // Buttons
-                h2 { "Buttons" }
-                p {
-                    a class="button" href=(Weblog::find_all()) { "button" }
-                    a class="button-big" href=(Site::find_home()) { "button-big" }
                 }
             }
         };
         Html(Common::basic("Design Language", body).into_string())
+    }
+
+    fn find() -> String {
+        "/design-language".to_string()
     }
 
     fn routes() -> Router {
@@ -498,6 +513,29 @@ impl Site {
         let body = html! {
             p { "I'm Joseph Shetaye, a fourth-year undergraduate computer science student at Stanford University." }
             p { "I work with operating systems & chips." }
+
+	    h1 { "Other People" }
+
+	    p { "My girlfriend "
+		 a href="https://skylarstrudwick.com" { "Skylar" }
+		 " is an excellent human rights researcher and advocate, and she has several blogs and podcasts on the topic! You should check her out."
+	    }
+
+	    p { "I've also met many amazing people at and around Stanford. "
+		 a href="https://jemoka.com" { "Jack" }
+		 ", "
+		 a href="https://kc3wny" { "Mason" }
+		 ", and "
+		 a href="https://kdrag0n.dev" { "Danny" }
+		 " are a few"
+	    }
+
+	    h1 { "This webpage" }
+            p {
+                "I recently developed a personal design language, which this website follows. It can be found "
+                a href=(DesignLanguage::find()) { "here" }
+                "."
+            }
         };
         return Common::basic("Home", body);
     }
