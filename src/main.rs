@@ -101,9 +101,9 @@ impl Common {
     fn header() -> Markup {
         html! {
             nav {
-                h1 { a href=(Site::find_home()) { "shetaye.me" }}
-                a href=(Weblog::find_all()) { "weblog" }
-                a href=(Site::find_work()) { "work" }
+                h1 { a class="button-big" href=(Site::find_home()) { "shetaye.me" }}
+                a class="button" href=(Weblog::find_all()) { "weblog" }
+                a class="button" href=(Site::find_work()) { "work" }
             }
         }
     }
@@ -287,13 +287,45 @@ struct DesignLanguage {}
 impl DesignLanguage {
     fn find() -> String { "/design-language".to_string() }
 
+    fn css_vars_with_prefix(prefix: &str) -> Vec<(String, String)> {
+        include_str!("../static/input.css")
+            .lines()
+            .filter_map(|line| {
+                let trimmed = line.trim();
+                if !trimmed.starts_with(prefix) {
+                    return None;
+                }
+                let (name, value) = trimmed.split_once(':')?;
+                let token_name = name.trim().trim_start_matches(prefix).to_string();
+                let token_value = value.trim().trim_end_matches(';').to_string();
+                Some((token_name, token_value))
+            })
+            .collect()
+    }
+
+    fn modus_operandi_palette() -> Vec<(String, String)> {
+        Self::css_vars_with_prefix("--modus-")
+    }
+
+    fn text_color_for_hex(hex: &str) -> &'static str {
+        let clean = hex.trim().trim_start_matches('#');
+        if clean.len() != 6 {
+            return "#000000";
+        }
+        let parse = |start: usize| u8::from_str_radix(&clean[start..start + 2], 16).ok();
+        let (Some(r), Some(g), Some(b)) = (parse(0), parse(2), parse(4)) else {
+            return "#000000";
+        };
+        let yiq = (r as u32 * 299 + g as u32 * 587 + b as u32 * 114) / 1000;
+        if yiq >= 140 { "#000000" } else { "#ffffff" }
+    }
+
     async fn handler() -> Html<String> {
+        let modus_operandi_palette = Self::modus_operandi_palette();
+
         let body = html! {
             article {
                 h1 { "Design Language" }
-                p { "A living reference of this site's visual components. Everything on this page is styled by the same stylesheet used across the entire site." }
-
-                hr;
 
                 // Typography
                 h2 { "Typography" }
@@ -310,8 +342,6 @@ impl DesignLanguage {
                     s { "Strikethrough text" } " — "
                     code { "inline code" }
                 }
-
-                hr;
 
                 // Fonts
                 h2 { "Fonts" }
@@ -334,31 +364,39 @@ impl DesignLanguage {
                     "Italic — The quick brown fox jumps over the lazy dog."
                 }
 
-                hr;
-
                 // Colors
                 h2 { "Colors" }
-                p { "The site uses a minimal palette that inverts in dark mode." }
-                div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;" {
-                    div style="width: 120px; text-align: center;" {
-                        div style="width: 120px; height: 60px; background: #ffffff; border: 1px solid #ddd;" {}
+                div class="color-reference-grid" {
+                    div class="color-reference-card" {
+                        div class="color-reference-swatch" style="background: #ffffff; border: 1px solid #ddd;" {}
                         p { "White (#fff)" }
                     }
-                    div style="width: 120px; text-align: center;" {
-                        div style="width: 120px; height: 60px; background: #000000; border: 1px solid #333;" {}
+                    div class="color-reference-card" {
+                        div class="color-reference-swatch" style="background: #000000; border: 1px solid #333;" {}
                         p { "Black (#000)" }
                     }
-                    div style="width: 120px; text-align: center;" {
-                        div style="width: 120px; height: 60px; background: #dddddd; border: 1px solid #ddd;" {}
+                    div class="color-reference-card" {
+                        div class="color-reference-swatch" style="background: #dddddd; border: 1px solid #ddd;" {}
                         p { "Border (#ddd)" }
                     }
-                    div style="width: 120px; text-align: center;" {
-                        div style="width: 120px; height: 60px; background: #333333; border: 1px solid #333;" {}
+                    div class="color-reference-card" {
+                        div class="color-reference-swatch" style="background: #333333; border: 1px solid #333;" {}
                         p { "Border dark (#333)" }
                     }
                 }
+                h3 { "Modus Operandi (base palette)" }
+                p { "Dense swatch view for contrast checks: each tile shows category + resolved hex from the shared CSS variables." }
+                div class="palette-grid" {
+                    @for (name, hex) in modus_operandi_palette {
+                        div
+                            class="palette-swatch"
+                            style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(&hex)) ";" } {
+                            div class="palette-swatch-name" { (name) }
+                            div class="palette-swatch-hex" { (hex) }
+                        }
+                    }
+                }
 
-                hr;
 
                 // Links
                 h2 { "Links" }
@@ -366,8 +404,6 @@ impl DesignLanguage {
                     "This is a " a href=(DesignLanguage::find()) { "regular link" }
                     ". Links are underlined by default and the underline disappears on hover."
                 }
-
-                hr;
 
                 // Lists
                 h2 { "Lists" }
@@ -396,8 +432,6 @@ impl DesignLanguage {
                     }
                 }
 
-                hr;
-
                 // Tables
                 h2 { "Tables" }
                 table {
@@ -418,15 +452,11 @@ impl DesignLanguage {
                     }
                 }
 
-                hr;
-
                 // Blockquotes
                 h2 { "Blockquotes" }
                 blockquote {
                     p { "This is a blockquote. It has a left border and italic styling, useful for setting apart quoted material." }
                 }
-
-                hr;
 
                 // Code Blocks
                 h2 { "Code Blocks" }
@@ -437,16 +467,17 @@ impl DesignLanguage {
                     }
                 }
 
-                hr;
-
                 // Horizontal Rules
                 h2 { "Horizontal Rules" }
                 p { "The dividers between each section on this page are horizontal rules." }
                 hr;
 
-                // Navigation
-                h2 { "Navigation" }
-                p { "The nav bar at the top of this page is the canonical navigation component. It features inverted colors (white text on black background in light mode, black text on white background in dark mode) and the underline disappears on hover, with the colors inverting." }
+                // Buttons
+                h2 { "Buttons" }
+                p {
+                    a class="button" href=(Weblog::find_all()) { "button" }
+                    a class="button-big" href=(Site::find_home()) { "button-big" }
+                }
             }
         };
         Html(Common::basic("Design Language", body).into_string())

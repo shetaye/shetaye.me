@@ -3,6 +3,89 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light dark;
+    --bg-0: #ffffff;
+    --bg-1: #f2f2f2;
+    --bg-2: #e6e6e6;
+    --fg-0: #000000;
+    --fg-1: #1a1a1a;
+    --fg-2: #333333;
+    --line-1: #dddddd;
+    --line-2: #bdbdbd;
+    --space-1: 0.125rem;
+    --space-2: 0.25rem;
+    --space-3: 0.5rem;
+    --space-4: 0.75rem;
+    --space-5: 1rem;
+    --space-6: 1.25rem;
+    --space-7: 1.75rem;
+    --text-body: 0.96rem;
+    --text-meta: 0.8rem;
+    --leading-dense: 1.35;
+    --leading-normal: 1.45;
+
+    /* Modus operandi base palette (added for reference/tokens) */
+    --modus-bg-main: #ffffff;
+    --modus-bg-dim: #f2f2f2;
+    --modus-fg-main: #000000;
+    --modus-fg-dim: #595959;
+    --modus-fg-alt: #193668;
+    --modus-bg-active: #c4c4c4;
+    --modus-bg-inactive: #e0e0e0;
+    --modus-border: #9f9f9f;
+    --modus-red: #a60000;
+    --modus-red-warmer: #972500;
+    --modus-red-cooler: #a0132f;
+    --modus-red-faint: #7f0000;
+    --modus-red-intense: #d00000;
+    --modus-green: #006800;
+    --modus-green-warmer: #316500;
+    --modus-green-cooler: #00663f;
+    --modus-green-faint: #2a5045;
+    --modus-green-intense: #008900;
+    --modus-yellow: #6f5500;
+    --modus-yellow-warmer: #884900;
+    --modus-yellow-cooler: #7a4f2f;
+    --modus-yellow-faint: #624416;
+    --modus-yellow-intense: #808000;
+    --modus-blue: #0031a9;
+    --modus-blue-warmer: #3548cf;
+    --modus-blue-cooler: #0000b0;
+    --modus-blue-faint: #003497;
+    --modus-blue-intense: #0000ff;
+    --modus-magenta: #721045;
+    --modus-magenta-warmer: #8f0075;
+    --modus-magenta-cooler: #531ab6;
+    --modus-magenta-faint: #7c318f;
+    --modus-magenta-intense: #dd22dd;
+    --modus-cyan: #005e8b;
+    --modus-cyan-warmer: #3f578f;
+    --modus-cyan-cooler: #005f5f;
+    --modus-cyan-faint: #005077;
+    --modus-cyan-intense: #008899;
+    --modus-rust: #8a290f;
+    --modus-gold: #80601f;
+    --modus-olive: #56692d;
+    --modus-slate: #2f3f83;
+    --modus-indigo: #4a3a8a;
+    --modus-maroon: #731c52;
+    --modus-pink: #7b435c;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-0: #000000;
+      --bg-1: #111111;
+      --bg-2: #1b1b1b;
+      --fg-0: #ffffff;
+      --fg-1: #f2f2f2;
+      --fg-2: #d9d9d9;
+      --line-1: #333333;
+      --line-2: #555555;
+    }
+  }
+
   /* Custom font faces */
   @font-face {
     font-family: 'Inter Tight';
@@ -38,7 +121,9 @@
 
   /* Styles for markdown-rendered content */
   article a {
-    @apply text-black dark:text-white underline;
+    color: var(--fg-0);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   article a:hover {
@@ -47,7 +132,9 @@
 
   /* General link styling outside of nav */
   a {
-    @apply text-black dark:text-white underline;
+    color: var(--fg-0);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   a:hover {
@@ -56,34 +143,123 @@
 
   /* Body styling */
   body {
-    @apply mx-auto my-4 max-w-[700px] px-4 bg-white dark:bg-black text-black dark:text-white font-sans;
+    margin: var(--space-5) auto;
+    max-width: 780px;
+    padding-inline: var(--space-5);
+    background-color: var(--bg-0);
+    color: var(--fg-0);
+    font-family: "Inter Tight", system-ui, sans-serif;
+    font-size: var(--text-body);
+    line-height: var(--leading-normal);
+    text-rendering: optimizeLegibility;
   }
 
   /* Navigation styling */
+  nav {
+    border-bottom: 1px solid var(--line-1);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+  }
+
   nav h1 {
-    @apply inline mr-4 text-3xl font-bold;
+    @apply inline;
+    margin-right: var(--space-2);
   }
 
-  nav a {
-    @apply bg-black dark:bg-white text-white dark:text-black px-1 no-underline hover:bg-white hover:dark:bg-black hover:text-black hover:dark:text-white mr-2;
+  .button,
+  .button-big {
+    background-color: var(--fg-0);
+    color: var(--bg-0);
+    border: 1px solid var(--fg-0);
+    padding-inline: var(--space-2);
+    margin-right: var(--space-2);
+    text-decoration: none;
+    line-height: var(--leading-dense);
+    font-size: var(--text-meta);
   }
 
-  /* Table styling */
+  .button-big {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .button:hover,
+  .button-big:hover {
+    background-color: var(--bg-0);
+    color: var(--fg-0);
+  }
+
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-2);
+    margin-block: var(--space-4);
+  }
+
+  .palette-swatch {
+    min-height: 72px;
+    padding: var(--space-2);
+    border: 1px solid var(--line-1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: "Source Code Pro", Consolas, Monaco, monospace;
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
+
+  .palette-swatch-name {
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .palette-swatch-hex {
+    opacity: 0.92;
+    word-break: break-word;
+  }
+
+  .color-reference-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-block: var(--space-4);
+  }
+
+  .color-reference-card {
+    width: calc(var(--space-6) * 6);
+    text-align: center;
+  }
+
+  .color-reference-swatch {
+    width: 100%;
+    height: calc(var(--space-6) * 3);
+  }
+
+  /* Table styling and scan alignment */
   table {
     @apply border-collapse w-full;
+    margin-block: var(--space-5);
+    font-size: 0.92rem;
+    line-height: var(--leading-dense);
+    font-variant-numeric: tabular-nums;
   }
 
   th, td {
-    @apply border border-border dark:border-border-dark p-1 text-left;
+    border: 1px solid var(--line-1);
+    padding: var(--space-2) var(--space-3);
+    text-align: left;
+    vertical-align: top;
   }
 
   th {
-    @apply bg-white dark:bg-black;
+    background-color: var(--bg-1);
+    color: var(--fg-0);
   }
 
   /* General paragraph spacing */
   p {
-    @apply my-4;
+    margin-block: var(--space-4);
   }
 
   article code,
@@ -99,53 +275,72 @@
     @apply block overflow-x-auto;
   }
 
-  /* Restore default HTML styling for markdown elements */
+  article pre {
+    margin-block: var(--space-4);
+    overflow-x: auto;
+    padding: var(--space-3);
+    border: 1px solid var(--line-1);
+    background-color: var(--bg-1);
+    line-height: var(--leading-dense);
+  }
+
+  article :is(h1, h2, h3, h4, h5, h6) {
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+
+  article :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: none;
+    /*font-size: 1.25rem;*/
+    font-weight: 700;
+  }
+
   article h1 {
-    @apply text-4xl font-bold mt-6 mb-4;
+    border-bottom: 1px solid var(--line-2);
+    padding-bottom: var(--space-3);
   }
 
   article h2 {
-    @apply text-3xl font-bold mt-5 mb-3;
-  }
-
-  article h3 {
-    @apply text-2xl font-bold mt-4 mb-2;
-  }
-
-  article h4 {
-    @apply text-xl font-bold mt-3 mb-2;
-  }
-
-  article h5 {
-    @apply text-lg font-bold mt-2 mb-1;
-  }
-
-  article h6 {
-    @apply text-base font-bold mt-2 mb-1;
+    border-bottom: 1px dashed var(--line-2);
+    padding-bottom: var(--space-2);
   }
 
   article p {
-    @apply my-4;
+    margin-block: var(--space-4);
   }
 
   article ul {
-    @apply list-disc pl-10 my-4;
+    @apply list-disc;
+    padding-left: 1.5rem;
+    margin-block: var(--space-4);
+    line-height: var(--leading-dense);
   }
 
   article ol {
-    @apply list-decimal pl-10 my-4;
+    @apply list-decimal;
+    padding-left: 1.5rem;
+    margin-block: var(--space-4);
+    line-height: var(--leading-dense);
   }
 
   article li {
-    @apply my-1;
+    margin-block: var(--space-1);
   }
 
   article blockquote {
-    @apply border-l-4 border-border dark:border-border-dark pl-4 my-4 italic;
+    border-left: 4px solid var(--line-2);
+    padding-left: var(--space-4);
+    margin-block: var(--space-4);
+    font-style: italic;
+    background-color: var(--bg-1);
   }
 
   article hr {
-    @apply border-t border-border dark:border-border-dark my-8;
+    border-top: 1px solid var(--line-2);
+    margin-block: var(--space-7);
   }
 
   article strong {
@@ -156,7 +351,21 @@
     @apply italic;
   }
 
-  article pre {
-    @apply my-4 overflow-x-auto;
+  /* Keep interaction changes low-cost and deterministic */
+  *, *::before, *::after {
+    transition-property: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+      scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
