@@ -32,13 +32,19 @@ flush_cloudflare_cache() {
         -H "Content-Type: application/json" \
         --data '{"purge_everything":true}')"
 
-    if echo "${response}" | grep -q '"success":true'; then
+    if command -v jq >/dev/null 2>&1; then
+        if echo "${response}" | jq -e '.success == true' >/dev/null 2>&1; then
+            echo "Cloudflare cache flushed"
+            return 0
+        fi
+    elif echo "${response}" | grep -Eq '"success"[[:space:]]*:[[:space:]]*true'; then
         echo "Cloudflare cache flushed"
-    else
-        echo "Cloudflare cache flush failed:"
-        echo "${response}"
-        return 1
+        return 0
     fi
+
+    echo "Cloudflare cache flush failed:"
+    echo "${response}"
+    return 1
 }
 
 load_env_files
