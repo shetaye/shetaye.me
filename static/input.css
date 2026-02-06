@@ -206,11 +206,35 @@
     font-family: inherit;
   }
 
-  .button,
-  .button-big {
+  .nav-button,
+  .nav-button-big {
     background-color: var(--fg-0);
     color: var(--bg-0);
     border: 1px solid var(--fg-0);
+    padding-inline: var(--space-2);
+    margin-right: var(--space-2);
+    text-decoration: none;
+    line-height: var(--leading-dense);
+    font-size: var(--text-meta);
+  }
+
+  .nav-button-big {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .nav-button:hover,
+  .nav-button-big:hover {
+    background-color: var(--bg-0);
+    color: var(--fg-0);
+  }
+
+  .button,
+  .button-big {
+    background-color: var(--modus-bg-main);
+    color: var(--modus-fg-main);
+    border: 1px solid var(--modus-border);
     padding-inline: var(--space-2);
     margin-right: var(--space-2);
     text-decoration: none;
@@ -226,8 +250,21 @@
 
   .button:hover,
   .button-big:hover {
-    background-color: var(--bg-0);
-    color: var(--fg-0);
+    background-color: var(--modus-bg-dim);
+    color: var(--modus-fg-main);
+  }
+
+  .button:focus-visible,
+  .button-big:focus-visible {
+    outline: 2px solid var(--modus-fg-alt);
+    outline-offset: -1px;
+  }
+
+  .button:active,
+  .button-big:active {
+    background-color: var(--modus-fg-alt);
+    border-color: var(--modus-fg-alt);
+    color: var(--modus-bg-main);
   }
 
   .palette-grid {

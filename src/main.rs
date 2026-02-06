@@ -100,9 +100,9 @@ impl Common {
     fn header() -> Markup {
         html! {
             nav {
-                h1 { a class="button-big" href=(Site::find_home()) { "shetaye.me" }}
-                a class="button" href=(Weblog::find_all()) { "weblog" }
-                a class="button" href=(Site::find_work()) { "work" }
+                h1 { a class="nav-button-big" href=(Site::find_home()) { "shetaye.me" }}
+                a class="nav-button" href=(Weblog::find_all()) { "weblog" }
+                a class="nav-button" href=(Site::find_work()) { "work" }
             }
         }
     }
@@ -434,6 +434,10 @@ impl DesignLanguage {
                     p {
                         a class="button" href=(Weblog::find_all()) { "button" } " "
                         a class="button-big" href=(Site::find_home()) { "button-big" }
+                    }
+                    p {
+                        a class="nav-button" href=(Weblog::find_all()) { "nav-button" } " "
+                        a class="nav-button-big" href=(Site::find_home()) { "nav-button-big" }
                     }
 
                     h2 { "Component Reference" }
