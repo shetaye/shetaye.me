@@ -2,6 +2,47 @@
 
 set -e
 
+load_env_files() {
+    if [[ -f ".env" ]]; then
+        # Export values from .env into the current shell.
+        set -a
+        # shellcheck disable=SC1091
+        source ".env"
+        set +a
+    fi
+
+    if [[ -f ".env.local" ]]; then
+        set -a
+        # shellcheck disable=SC1091
+        source ".env.local"
+        set +a
+    fi
+}
+
+flush_cloudflare_cache() {
+    if [[ -z "${CF_API_TOKEN:-}" || -z "${CF_ZONE_ID:-}" ]]; then
+        echo "Skipping Cloudflare cache flush (set CF_API_TOKEN and CF_ZONE_ID to enable)"
+        return 0
+    fi
+
+    echo "Flushing Cloudflare cache..."
+    local response
+    response="$(curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+        -H "Authorization: Bearer ${CF_API_TOKEN}" \
+        -H "Content-Type: application/json" \
+        --data '{"purge_everything":true}')"
+
+    if echo "${response}" | grep -q '"success":true'; then
+        echo "Cloudflare cache flushed"
+    else
+        echo "Cloudflare cache flush failed:"
+        echo "${response}"
+        return 1
+    fi
+}
+
+load_env_files
+
 echo "Stopping existing shetaye-me service if running..."
 if sudo systemctl is-active --quiet shetaye-me.service 2>/dev/null; then
     sudo systemctl stop shetaye-me.service
@@ -28,6 +69,8 @@ sudo systemctl daemon-reload
 echo "Enabling and starting shetaye-me service..."
 sudo systemctl enable shetaye-me.service
 sudo systemctl start shetaye-me.service
+
+flush_cloudflare_cache
 
 echo "Installation complete!"
 echo "Service status:"
