@@ -10,6 +10,7 @@ use axum::{
 use time::macros::datetime;
 use mime_guess::from_path;
 use std::net::SocketAddr;
+use std::collections::HashMap;
 use tokio;
 use pulldown_cmark::{Event, Tag};
 use futures::stream::unfold;
@@ -284,9 +285,8 @@ impl Faucet {
 
 struct DesignLanguage {}
 impl DesignLanguage {
-    fn css_vars_with_prefix(prefix: &str) -> Vec<(String, String)> {
-        include_str!("../static/input.css")
-            .lines()
+    fn css_vars_with_prefix_from(css: &str, prefix: &str) -> Vec<(String, String)> {
+        css.lines()
             .filter_map(|line| {
                 let trimmed = line.trim();
                 if !trimmed.starts_with(prefix) {
@@ -300,8 +300,28 @@ impl DesignLanguage {
             .collect()
     }
 
-    fn modus_operandi_palette() -> Vec<(String, String)> {
-        Self::css_vars_with_prefix("--modus-")
+    fn css_vars_with_prefix(prefix: &str) -> Vec<(String, String)> {
+        Self::css_vars_with_prefix_from(include_str!("../static/input.css"), prefix)
+    }
+
+    fn css_vars_with_prefix_by_mode(prefix: &str) -> (Vec<(String, String)>, Vec<(String, String)>) {
+        let css = include_str!("../static/input.css");
+        let Some((light_css, dark_css)) = css.split_once("@media (prefers-color-scheme: dark)") else {
+            let vars = Self::css_vars_with_prefix_from(css, prefix);
+            return (vars.clone(), vars);
+        };
+
+        let light = Self::css_vars_with_prefix_from(light_css, prefix);
+        let dark_overrides = Self::css_vars_with_prefix_from(dark_css, prefix);
+        let mut dark_map: HashMap<String, String> = light.iter().cloned().collect();
+        for (name, value) in dark_overrides {
+            dark_map.insert(name, value);
+        }
+        let dark = light
+            .iter()
+            .filter_map(|(name, _)| dark_map.get(name).map(|value| (name.clone(), value.clone())))
+            .collect();
+        (light, dark)
     }
 
     fn spacing_scale() -> Vec<(String, String)> {
@@ -324,7 +344,18 @@ impl DesignLanguage {
     }
 
     async fn handler() -> Html<String> {
-        let modus_operandi_palette = Self::modus_operandi_palette();
+        let (modus_palette_light, modus_palette_dark) = Self::css_vars_with_prefix_by_mode("--modus-");
+        let modus_palette_dark_map: HashMap<String, String> = modus_palette_dark.into_iter().collect();
+        let modus_operandi_palette: Vec<(String, String, String)> = modus_palette_light
+            .iter()
+            .map(|(name, light_hex)| {
+                let dark_hex = modus_palette_dark_map
+                    .get(name)
+                    .cloned()
+                    .unwrap_or_else(|| light_hex.clone());
+                (name.clone(), light_hex.clone(), dark_hex)
+            })
+            .collect();
         let spacing_scale = Self::spacing_scale();
         let guide_palette_tokens = [
             "bg-main",
@@ -336,13 +367,13 @@ impl DesignLanguage {
             "bg-inactive",
             "border",
         ];
-        let guide_palette: Vec<(String, String)> = guide_palette_tokens
+        let guide_palette: Vec<(String, String, String)> = guide_palette_tokens
             .iter()
             .filter_map(|token| {
                 modus_operandi_palette
                     .iter()
-                    .find(|(name, _)| name == token)
-                    .map(|(_, hex)| ((*token).to_string(), hex.to_string()))
+                    .find(|(name, _, _)| name == token)
+                    .cloned()
             })
             .collect();
 
@@ -373,12 +404,19 @@ impl DesignLanguage {
 
                     h2 { "Color Palette" }
                     div class="palette-grid" {
-                        @for (name, hex) in &guide_palette {
+                        @for (name, light_hex, dark_hex) in &guide_palette {
                             div
                                 class="palette-swatch"
-                                style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(hex)) ";" } {
+                                style={
+                                    "--swatch-fg-light: " (Self::text_color_for_hex(light_hex)) "; "
+                                    "--swatch-fg-dark: " (Self::text_color_for_hex(dark_hex)) "; "
+                                    "background: var(--modus-" (name) ");"
+                                } {
                                 div class="palette-swatch-name" { (name) }
-                                div class="palette-swatch-hex" { (hex) }
+                                div class="palette-swatch-hex" {
+                                    span class="palette-hex-light" { (light_hex) }
+                                    span class="palette-hex-dark" { (dark_hex) }
+                                }
                             }
                         }
                     }
@@ -483,12 +521,19 @@ impl DesignLanguage {
                     h2 { "Modus Operandi Reference Swatches" }
                     p { "Dense swatch view for contrast checks using shared CSS variables." }
                     div class="palette-grid" {
-                        @for (name, hex) in modus_operandi_palette {
+                        @for (name, light_hex, dark_hex) in &modus_operandi_palette {
                             div
                                 class="palette-swatch"
-                                style={ "background: var(--modus-" (name) "); color: " (Self::text_color_for_hex(&hex)) ";" } {
+                                style={
+                                    "--swatch-fg-light: " (Self::text_color_for_hex(light_hex)) "; "
+                                    "--swatch-fg-dark: " (Self::text_color_for_hex(dark_hex)) "; "
+                                    "background: var(--modus-" (name) ");"
+                                } {
                                 div class="palette-swatch-name" { (name) }
-                                div class="palette-swatch-hex" { (hex) }
+                                div class="palette-swatch-hex" {
+                                    span class="palette-hex-light" { (light_hex) }
+                                    span class="palette-hex-dark" { (dark_hex) }
+                                }
                             }
                         }
                     }

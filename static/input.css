@@ -5,14 +5,6 @@
 @layer base {
   :root {
     color-scheme: light dark;
-    --bg-0: #ffffff;
-    --bg-1: #f2f2f2;
-    --bg-2: #e6e6e6;
-    --fg-0: #000000;
-    --fg-1: #1a1a1a;
-    --fg-2: #333333;
-    --line-1: #dddddd;
-    --line-2: #bdbdbd;
     --space-1: 0.125rem;
     --space-2: 0.25rem;
     --space-3: 0.5rem;
@@ -71,18 +63,66 @@
     --modus-indigo: #4a3a8a;
     --modus-maroon: #731c52;
     --modus-pink: #7b435c;
+
+    /* Core UI tokens are aliases of the shared Modus palette */
+    --bg-0: var(--modus-bg-main);
+    --bg-1: var(--modus-bg-dim);
+    --bg-2: var(--modus-bg-inactive);
+    --fg-0: var(--modus-fg-main);
+    --fg-1: var(--modus-fg-main);
+    --fg-2: var(--modus-fg-dim);
+    --line-1: var(--modus-bg-inactive);
+    --line-2: var(--modus-bg-active);
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg-0: #000000;
-      --bg-1: #111111;
-      --bg-2: #1b1b1b;
-      --fg-0: #ffffff;
-      --fg-1: #f2f2f2;
-      --fg-2: #d9d9d9;
-      --line-1: #333333;
-      --line-2: #555555;
+      /* Official Modus Vivendi values */
+      --modus-bg-main: #000000;
+      --modus-bg-dim: #1e1e1e;
+      --modus-fg-main: #ffffff;
+      --modus-fg-dim: #989898;
+      --modus-fg-alt: #c6daff;
+      --modus-bg-active: #535353;
+      --modus-bg-inactive: #3a3a3a;
+      --modus-border: #9f9f9f;
+      --modus-red: #ff8059;
+      --modus-red-warmer: #ff8f88;
+      --modus-red-cooler: #ff9f9f;
+      --modus-red-faint: #d56f72;
+      --modus-red-intense: #ff5f5f;
+      --modus-green: #44bc44;
+      --modus-green-warmer: #70b900;
+      --modus-green-cooler: #00c06f;
+      --modus-green-faint: #88ca9f;
+      --modus-green-intense: #44df44;
+      --modus-yellow: #d0bc00;
+      --modus-yellow-warmer: #fec43f;
+      --modus-yellow-cooler: #dfaf7a;
+      --modus-yellow-faint: #d2b580;
+      --modus-yellow-intense: #efef00;
+      --modus-blue: #2fafff;
+      --modus-blue-warmer: #79a8ff;
+      --modus-blue-cooler: #00bcff;
+      --modus-blue-faint: #82b0ec;
+      --modus-blue-intense: #338fff;
+      --modus-magenta: #feacd0;
+      --modus-magenta-warmer: #f78fe7;
+      --modus-magenta-cooler: #b6a0ff;
+      --modus-magenta-faint: #caa6df;
+      --modus-magenta-intense: #ff66ff;
+      --modus-cyan: #00d3d0;
+      --modus-cyan-warmer: #4ae2f0;
+      --modus-cyan-cooler: #6ae4b9;
+      --modus-cyan-faint: #9ac8e0;
+      --modus-cyan-intense: #00eff0;
+      --modus-rust: #db7b5f;
+      --modus-gold: #c0965b;
+      --modus-olive: #9cbd6f;
+      --modus-slate: #76afbf;
+      --modus-indigo: #9099d9;
+      --modus-maroon: #cf7fa7;
+      --modus-pink: #d09dc0;
     }
   }
 
@@ -206,8 +246,8 @@
     font-family: inherit;
   }
 
-  .nav-button,
-  .nav-button-big {
+  a.nav-button,
+  a.nav-button-big {
     background-color: var(--fg-0);
     color: var(--bg-0);
     border: 1px solid var(--fg-0);
@@ -218,20 +258,20 @@
     font-size: var(--text-meta);
   }
 
-  .nav-button-big {
+  a.nav-button-big {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.2;
   }
 
-  .nav-button:hover,
-  .nav-button-big:hover {
+  a.nav-button:hover,
+  a.nav-button-big:hover {
     background-color: var(--bg-0);
     color: var(--fg-0);
   }
 
-  .button,
-  .button-big {
+  a.button,
+  a.button-big {
     background-color: var(--modus-bg-main);
     color: var(--modus-fg-main);
     border: 1px solid var(--modus-border);
@@ -242,26 +282,26 @@
     font-size: var(--text-meta);
   }
 
-  .button-big {
+  a.button-big {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.2;
   }
 
-  .button:hover,
-  .button-big:hover {
+  a.button:hover,
+  a.button-big:hover {
     background-color: var(--modus-bg-dim);
     color: var(--modus-fg-main);
   }
 
-  .button:focus-visible,
-  .button-big:focus-visible {
+  a.button:focus-visible,
+  a.button-big:focus-visible {
     outline: 2px solid var(--modus-fg-alt);
     outline-offset: -1px;
   }
 
-  .button:active,
-  .button-big:active {
+  a.button:active,
+  a.button-big:active {
     background-color: var(--modus-fg-alt);
     border-color: var(--modus-fg-alt);
     color: var(--modus-bg-main);
@@ -284,6 +324,7 @@
     font-family: "Source Code Pro", Consolas, Monaco, monospace;
     font-size: 0.74rem;
     line-height: 1.25;
+    color: var(--swatch-fg-light, var(--fg-0));
   }
 
   .palette-swatch-name {
@@ -296,16 +337,27 @@
     word-break: break-word;
   }
 
+  .palette-hex-dark {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .palette-swatch {
+      color: var(--swatch-fg-dark);
+    }
+
+    .palette-hex-light {
+      display: none;
+    }
+
+    .palette-hex-dark {
+      display: inline;
+    }
+  }
+
   .guide-shell {
     max-width: 960px;
     margin-inline: auto;
-    --bg-0: var(--modus-bg-main);
-    --bg-1: var(--modus-bg-dim);
-    --fg-0: var(--modus-fg-main);
-    --fg-1: var(--modus-fg-main);
-    --fg-2: var(--modus-fg-dim);
-    --line-1: var(--modus-border);
-    --line-2: var(--modus-border);
   }
 
   .guide-top {
@@ -445,6 +497,7 @@
     flex-direction: column;
     gap: var(--space-2);
     margin-block: var(--space-4);
+    font-family: "Source Code Pro", Consolas, Monaco, monospace;
   }
 
   .guide-space-item {
@@ -461,7 +514,7 @@
   .guide-space-item span {
     font-size: 0.72rem;
     color: var(--fg-2);
-    font-family: "Source Code Pro", Consolas, Monaco, monospace;
+    font-family: inherit;
   }
 
   .color-reference-grid {
