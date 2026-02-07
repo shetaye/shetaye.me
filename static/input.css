@@ -220,7 +220,8 @@
     padding-inline: var(--space-5);
     background-color: var(--bg-0);
     color: var(--fg-0);
-    font-family: "Inter Tight", system-ui, sans-serif;
+    /* font-family: "Inter Tight", system-ui, sans-serif; */
+    font-family: "IBM Plex Serif";
     font-size: var(--text-body);
     line-height: var(--leading-normal);
     text-rendering: optimizeLegibility;
@@ -243,7 +244,6 @@
 
   nav h1 {
     @apply inline;
-    font-family: "Inter Tight", system-ui, sans-serif;
     margin: 0 var(--space-2) 0 0;
     padding: 0;
     border: none;

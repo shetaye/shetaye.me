@@ -406,7 +406,7 @@ impl DesignLanguage {
 
 		    p {
 			"Based on "
-			    a href="https://github.com/shetaye/funny-moka/" { "Jack's design" }
+			    a href="https://www.jemoka.com/design/" { "Jack's design" }
 			" and "
 			    a href="https://usgraphics.com/" { "Neil's design" }
 			"."
