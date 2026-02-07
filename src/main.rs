@@ -563,11 +563,12 @@ impl Site {
             p { "I'm Joseph Shetaye, a fourth-year undergraduate computer science student at Stanford University." }
             p { "I work with operating systems & chips." }
 
+	    h1 { "My Work" }
+
 	    h1 { "Other People" }
 
-	    p { "My girlfriend "
-		 a href="https://skylarstrudwick.com" { "Skylar" }
-		 " is an excellent human rights researcher and advocate, and she has several blogs and podcasts on the topic! You should check her out."
+	    p {  a href="https://skylarstrudwick.com" { "Skylar" }
+		 " is an excellent human rights researcher and advocate, and she has several blogs and podcasts on the topic! You should definitely check her out."
 	    }
 
 	    p { "I've also met many amazing people at and around Stanford. "
@@ -576,7 +577,7 @@ impl Site {
 		 a href="https://kc3wny" { "Mason" }
 		 ", and "
 		 a href="https://kdrag0n.dev" { "Danny" }
-		 " are a few"
+		 " are a few. You should probably check them out too."
 	    }
 
 	    h1 { "This webpage" }
