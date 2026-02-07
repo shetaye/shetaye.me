@@ -12,7 +12,7 @@ For the next few years, I took an interest in artificial intelligence. No real p
 
 Soon after my freshman year, I decided AI was not for me. I liked systems though, so I dug back to my roots and got back into embedded. I led a major rewrite of the Stanford Student Space Initiative's satellite [firmware](https://github.com/stanford-ssi/samwise-flight-software) and built a [thread equivalence checking tool](weblog://thread-equivalence-checker) (as coursework for CS 240LX).
 
-I still liked AI though and liked the idea of combining the two, so I did some research at Hazy on [inference engines](https://scalingintelligence.stanford.edu/blogs/tokasaurus/) and LLM chip design (no link, sorry). I also worked on [Psi](https://github.com/Michael-Nath/social-inference), a distributed inference engine that ran entirely in WebGPU! I spent the summer after working on the low-level PCC userspace.
+I still liked AI though and liked the idea of combining the two, so I did some research at [Hazy](https://hazyresearch.stanford.edu/) on [inference engines](https://scalingintelligence.stanford.edu/blogs/tokasaurus/) and LLM chip design (no link, sorry). I also worked on [Psi](https://github.com/Michael-Nath/social-inference), a distributed inference engine that ran entirely in WebGPU! I spent the summer after working on the low-level PCC userspace.
 
 Recently, I've been very interested in more "pure systems" work. I built [Solari](https://github.com/shetaye/solari) (as coursework for CS 238), a POMDP-based scheduler for HMP systems, and am currently working on a new programming language for safe and efficient tensor programming.
 
