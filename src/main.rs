@@ -107,10 +107,20 @@ impl Common {
             }
         }
     }
+
+    fn footer() -> Markup {
+        html! {
+            footer class="site-footer" {
+                "© " (time::OffsetDateTime::now_utc().year()) " Joseph Shetaye"
+            }
+        }
+    }
+
     fn basic(title: &str, body: Markup) -> Markup {
         Self::skeleton(Self::includes(title, None), html! {
             (Self::header())
             (body)
+            (Self::footer())
         })
     }
 }
@@ -543,10 +553,6 @@ impl DesignLanguage {
         Html(Common::basic("Design Language", body).into_string())
     }
 
-    fn find() -> String {
-        "/design-language".to_string()
-    }
-
     fn routes() -> Router {
         Router::new().route("/design-language", get(Self::handler))
     }
@@ -559,35 +565,16 @@ impl Site {
     }
 
     fn home() -> Markup {
+        let content = Data::get_str("home.md");
+
+        let rendered = render_markdown(content.as_str());
+
         let body = html! {
-            p { "I'm Joseph Shetaye, a fourth-year undergraduate computer science student at Stanford University." }
-            p { "I work with operating systems & chips." }
-
-	    h1 { "My Work" }
-
-	    h1 { "Other People" }
-
-	    p {  a href="https://skylarstrudwick.com" { "Skylar" }
-		 " is an excellent human rights researcher and advocate, and she has several blogs and podcasts on the topic! You should definitely check her out."
-	    }
-
-	    p { "I've also met many amazing people at and around Stanford. "
-		 a href="https://jemoka.com" { "Jack" }
-		 ", "
-		 a href="https://kc3wny" { "Mason" }
-		 ", and "
-		 a href="https://kdrag0n.dev" { "Danny" }
-		 " are a few. You should probably check them out too."
-	    }
-
-	    h1 { "This webpage" }
-            p {
-                "I recently developed a personal design language, which this website follows. It can be found "
-                a href=(DesignLanguage::find()) { "here" }
-                "."
+            article {
+                (PreEscaped(rendered))
             }
         };
-        return Common::basic("Home", body);
+        Common::basic("Home", body)
     }
 
     async fn home_handler() -> Html<String> {

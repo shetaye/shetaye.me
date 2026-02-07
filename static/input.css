@@ -233,6 +233,14 @@
     padding-bottom: var(--space-4);
   }
 
+  footer.site-footer {
+    border-top: 1px solid var(--line-1);
+    margin-top: var(--space-7);
+    padding-top: var(--space-4);
+    color: var(--fg-2);
+    font-size: var(--text-meta);
+  }
+
   nav h1 {
     @apply inline;
     font-family: "Inter Tight", system-ui, sans-serif;
