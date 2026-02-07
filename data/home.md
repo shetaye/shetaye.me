@@ -22,7 +22,7 @@ If any of this sounds cool to you, we should get in touch :)
 
 [Skylar](https://skylarstrudwick.com) is an excellent human rights researcher and advocate, and she has several blogs and podcasts on the topic! You should definitely check her out.
 
-I've also met many amazing people at and around Stanford. [Jack](https://jemoka.com), [Mason](https://kc3wny), and [Danny](https://kdrag0n.dev) are a few. You should probably check them out too.
+I've also met many amazing people at and around Stanford. [Jack](https://jemoka.com), [Mason](https://www.kc3wny.com/), and [Danny](https://kdrag0n.dev) are a few. You should probably check them out too.
 
 # This Website
 
