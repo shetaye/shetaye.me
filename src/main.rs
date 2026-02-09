@@ -77,7 +77,7 @@ impl Common {
     fn includes(title: &str, additional: Option<Markup>) -> Markup {
         let base = html! {
             link rel="preload" href=(StaticFiles::find("style.css").unwrap()) as="style";
-            link rel="preload" href=(StaticFiles::find("InterTight.ttf").unwrap()) as="font" type="font/ttf" crossorigin="anonymous";
+            link rel="preload" href=(StaticFiles::find("Lora-VariableFont_wght.ttf").unwrap()) as="font" type="font/ttf" crossorigin="anonymous";
             link rel="stylesheet" href=(StaticFiles::find("style.css").unwrap());
             link rel="icon" type="image/x-icon" href="/static/favicon.ico";
             link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png";
@@ -448,12 +448,12 @@ impl DesignLanguage {
                         }
 
                         h3 style="font-family: 'Inter Tight', system-ui, sans-serif;" { "Inter Tight (sans-serif)" }
-                        p style="font-weight: 300;" { "Light (300) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-weight: 400;" { "Regular (400) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-weight: 500;" { "Medium (500) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-weight: 700;" { "Bold (700) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-weight: 900;" { "Black (900) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-style: italic;" { "Italic - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 300;" { "Light (300) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 400;" { "Regular (400) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500;" { "Medium (500) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 700;" { "Bold (700) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 900;" { "Black (900) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-style: italic;" { "Italic - The quick brown fox jumps over the lazy dog." }
 
                         h3 style="font-family: 'Source Code Pro', Consolas, Monaco, monospace;" { "Source Code Pro (monospace)" }
                         p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 400;" {
@@ -466,14 +466,14 @@ impl DesignLanguage {
                             "Italic - The quick brown fox jumps over the lazy dog."
                         }
 
-                        h3 style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif;" { "IBM Plex Serif (serif)" }
-                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-weight: 400;" {
+                        h3 style="font-family: 'Lora', Georgia, 'Times New Roman', serif;" { "Lora (serif)" }
+                        p style="font-family: 'Lora', Georgia, 'Times New Roman', serif; font-weight: 400;" {
                             "Regular (400) - The quick brown fox jumps over the lazy dog."
                         }
-                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-weight: 700;" {
+                        p style="font-family: 'Lora', Georgia, 'Times New Roman', serif; font-weight: 700;" {
                             "Bold (700) - The quick brown fox jumps over the lazy dog."
                         }
-                        p style="font-family: 'IBM Plex Serif', Georgia, 'Times New Roman', serif; font-style: italic;" {
+                        p style="font-family: 'Lora', Georgia, 'Times New Roman', serif; font-style: italic;" {
                             "Italic - The quick brown fox jumps over the lazy dog."
                         }
                     }
