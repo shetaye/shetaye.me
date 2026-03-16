@@ -190,7 +190,7 @@ impl Entry {
     }
 }
 
-static WEBLOG_ENTRIES: [Entry; 4] = [
+static WEBLOG_ENTRIES: [Entry; 5] = [
     Entry {
         slug: "ls2j",
         title: "LS2J",
@@ -214,6 +214,12 @@ static WEBLOG_ENTRIES: [Entry; 4] = [
         title: "Thread Equivalence Checking - Part 3",
         published_on: datetime!(2024-08-21 5:57 pm -5),
         at: "weblog/thread-equivalence-checker-3.md"
+    },
+    Entry {
+        slug: "complexity",
+        title: "On Complexity",
+        published_on: datetime!(2026-03-16 3:41 pm -7),
+        at: "weblog/complexity.md"
     }
 ];
 
