@@ -5,8 +5,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter Tight"', 'system-ui', 'sans-serif'],
-        mono: ['"Source Code Pro"', 'Consolas', 'Monaco', 'monospace'],
+        sans: ['"Iosevka Aile"', 'system-ui', 'sans-serif'],
+        serif: ['Lora', 'Georgia', '"Times New Roman"', 'serif'],
+        mono: ['Iosevka', 'Consolas', 'Monaco', 'monospace'],
       },
       colors: {
         border: {

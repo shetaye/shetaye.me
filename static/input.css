@@ -128,58 +128,82 @@
 
   /* Custom font faces */
   @font-face {
-    font-family: 'Inter Tight';
-    src: url('/static/InterTight.ttf') format('truetype');
-    font-weight: 100 900;
+    font-family: 'Lora';
+    src: url('/static/Lora-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 400 700;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Inter Tight';
-    src: url('/static/InterTight-italic.ttf') format('truetype');
-    font-weight: 100 900;
+    font-family: 'Lora';
+    src: url('/static/Lora-Italic-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 400 700;
     font-style: italic;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Source Code Pro';
-    src: url('/static/SourceCodePro.ttf') format('truetype');
-    font-weight: 200 900;
+    font-family: 'Iosevka Aile';
+    src: url('/static/IosevkaAile-Regular.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'Source Code Pro';
-    src: url('/static/SourceCodePro-italic.ttf') format('truetype');
-    font-weight: 200 900;
+    font-family: 'Iosevka Aile';
+    src: url('/static/IosevkaAile-Italic.woff2') format('woff2');
+    font-weight: 400;
     font-style: italic;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'et-book';
-    src: url('/static/et-book-roman-line-figures.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Iosevka Aile';
+    src: url('/static/IosevkaAile-Bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'et-book';
-    src: url('/static/et-book-display-italic-old-style-figures.woff') format('woff');
-    font-weight: normal;
+    font-family: 'Iosevka Aile';
+    src: url('/static/IosevkaAile-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
     font-style: italic;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'et-book';
-    src: url('/static/et-book-bold-line-figures.woff') format('woff');
-    font-weight: bold;
+    font-family: 'Iosevka';
+    src: url('/static/Iosevka-Regular.woff2') format('woff2');
+    font-weight: 400;
     font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/static/Iosevka-Italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/static/Iosevka-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Iosevka';
+    src: url('/static/Iosevka-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
+    font-style: italic;
     font-display: swap;
   }
 
@@ -212,8 +236,7 @@
     padding-inline: var(--space-5);
     background-color: var(--bg-0);
     color: var(--fg-0);
-    /* font-family: "Inter Tight", system-ui, sans-serif; */
-    font-family: "et-book", Georgia, "Times New Roman", serif;
+    font-family: "Iosevka Aile", system-ui, sans-serif;
     font-size: var(--text-body);
     line-height: var(--leading-normal);
     text-rendering: optimizeLegibility;
@@ -321,7 +344,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: "Source Code Pro", Consolas, Monaco, monospace;
+    font-family: "Iosevka", Consolas, Monaco, monospace;
     font-size: 0.74rem;
     line-height: 1.25;
     color: var(--swatch-fg-light, var(--fg-0));
@@ -389,7 +412,7 @@
     border: 1px solid var(--line-2);
     background: var(--fg-0);
     color: var(--bg-0);
-    font-family: "Source Code Pro", Consolas, Monaco, monospace;
+    font-family: "Iosevka", Consolas, Monaco, monospace;
     font-size: 0.72rem;
     font-weight: 700;
   }
@@ -475,21 +498,21 @@
   }
 
   .guide-note-info {
-    background: var(--modus-fg-alt);
-    border-color: var(--modus-fg-alt);
-    color: var(--modus-bg-main);
+    background: var(--modus-bg-dim);
+    border-color: var(--modus-blue);
+    color: var(--modus-blue);
   }
 
   .guide-note-warning {
     background: var(--modus-bg-dim);
-    border-color: var(--modus-fg-alt);
-    color: var(--modus-fg-alt);
+    border-color: var(--modus-yellow);
+    color: var(--modus-yellow);
   }
 
   .guide-note-error {
-    background: var(--modus-bg-active);
-    border-color: var(--modus-fg-alt);
-    color: var(--modus-fg-main);
+    background: var(--modus-bg-dim);
+    border-color: var(--modus-red);
+    color: var(--modus-red);
   }
 
   .guide-spacing {
@@ -497,7 +520,7 @@
     flex-direction: column;
     gap: var(--space-2);
     margin-block: var(--space-4);
-    font-family: "Source Code Pro", Consolas, Monaco, monospace;
+    font-family: "Iosevka", Consolas, Monaco, monospace;
   }
 
   .guide-space-item {
@@ -583,7 +606,7 @@
   }
 
   :is(h1, h2, h3, h4, h5, h6) {
-    font-family: "et-book", Georgia, "Times New Roman", serif;
+    font-family: "Lora", Georgia, "Times New Roman", serif;
     line-height: 1.2;
     letter-spacing: 0.01em;
   }

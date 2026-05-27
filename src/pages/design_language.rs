@@ -160,22 +160,19 @@ impl DesignLanguage {
                             code { "inline code" }
                         }
 
-                        h3 style="font-family: 'Inter Tight', system-ui, sans-serif;" { "Inter Tight (sans-serif)" }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 300;" { "Light (300) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 400;" { "Regular (400) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 500;" { "Medium (500) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 700;" { "Bold (700) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-weight: 900;" { "Black (900) - The quick brown fox jumps over the lazy dog." }
-                        p style="font-family: 'Inter Tight', system-ui, sans-serif; font-style: italic;" { "Italic - The quick brown fox jumps over the lazy dog." }
+                        h3 style="font-family: 'Iosevka Aile', system-ui, sans-serif;" { "Iosevka Aile (sans-serif)" }
+                        p style="font-family: 'Iosevka Aile', system-ui, sans-serif; font-weight: 400;" { "Regular (400) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Iosevka Aile', system-ui, sans-serif; font-weight: 700;" { "Bold (700) - The quick brown fox jumps over the lazy dog." }
+                        p style="font-family: 'Iosevka Aile', system-ui, sans-serif; font-style: italic;" { "Italic - The quick brown fox jumps over the lazy dog." }
 
-                        h3 style="font-family: 'Source Code Pro', Consolas, Monaco, monospace;" { "Source Code Pro (monospace)" }
-                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 400;" {
+                        h3 style="font-family: 'Iosevka', Consolas, Monaco, monospace;" { "Iosevka (monospace)" }
+                        p style="font-family: 'Iosevka', Consolas, Monaco, monospace; font-weight: 400;" {
                             "Regular (400) - The quick brown fox jumps over the lazy dog."
                         }
-                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-weight: 700;" {
+                        p style="font-family: 'Iosevka', Consolas, Monaco, monospace; font-weight: 700;" {
                             "Bold (700) - The quick brown fox jumps over the lazy dog."
                         }
-                        p style="font-family: 'Source Code Pro', Consolas, Monaco, monospace; font-style: italic;" {
+                        p style="font-family: 'Iosevka', Consolas, Monaco, monospace; font-style: italic;" {
                             "Italic - The quick brown fox jumps over the lazy dog."
                         }
 

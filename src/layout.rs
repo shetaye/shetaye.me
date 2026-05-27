@@ -18,6 +18,7 @@ impl Common {
     pub fn includes(title: &str, additional: Option<Markup>) -> Markup {
         let base = html! {
             link rel="preload" href=(StaticFiles::find("style.css").unwrap()) as="style";
+            link rel="preload" href=(StaticFiles::find("IosevkaAile-Regular.woff2").unwrap()) as="font" type="font/woff2" crossorigin="anonymous";
             link rel="preload" href=(StaticFiles::find("Lora-VariableFont_wght.ttf").unwrap()) as="font" type="font/ttf" crossorigin="anonymous";
             link rel="stylesheet" href=(StaticFiles::find("style.css").unwrap());
             link rel="icon" type="image/x-icon" href="/static/favicon.ico";
